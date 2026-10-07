@@ -1,5 +1,9 @@
 # Course GUI - Agents 进度记录
 
+## bug 修改专项
+- [x] 1. 新加作业不接受中文输入：根因是中文输入法开启时输入的数字/冒号/横杠/空格常为全角（如 "２０２６－１０－１０　２３：５９"），`parse_deadline` 用 strptime 直接解析失败，弹窗报"输入有误"，表现为中文输不进去。修复：`models.py` 新增 `normalize_text()`（全角→半角、全角空格→半角），`parse_deadline` 先归一化再解析；`dialogs.py` 新增 `_ime_friendly()` 显式启用输入法（`WA_InputMethodEnabled` + `ImhNone`）并作用于全部文本框，作业截止输入先归一化再校验。验证：`python -m course_gui.storage` 通过；全角截止解析、中文标题 validate、dialogs offscreen 导入全绿
+
+
 > 本文件负责记录 Agent 工作进度，每完成一步追加更新。
 
 ## 项目简介

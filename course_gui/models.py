@@ -13,6 +13,25 @@ def new_id() -> str:
 DATETIME_FMT = "%Y-%m-%d %H:%M"
 
 
+def normalize_text(s: str) -> str:
+    """中文输入法兼容：全角字符转半角，全角空格转半角，去首尾空白。
+
+    中文输入法开启时，用户 typed 的数字/冒号/横杠/空格常为全角
+    （如 "２０２６－１０－１０　２３：５９"），strptime 无法解析，
+    导致新增作业弹窗报"输入有误"，表现为"不接受中文输入"。
+    """
+    out: list[str] = []
+    for ch in s:
+        o = ord(ch)
+        if o == 0x3000:  # 全角空格
+            out.append(" ")
+        elif 0xFF01 <= o <= 0xFF5E:  # 全角 ASCII 区
+            out.append(chr(o - 0xFEE0))
+        else:
+            out.append(ch)
+    return "".join(out).strip()
+
+
 @dataclass
 class Course:
     id: str = field(default_factory=new_id)
@@ -88,7 +107,8 @@ class Homework:
 
 
 def parse_deadline(s: str) -> datetime:
+    s = normalize_text(s)
     try:
-        return datetime.strptime(s.strip(), DATETIME_FMT)
+        return datetime.strptime(s, DATETIME_FMT)
     except ValueError:
         raise ValueError(f"截止时间格式错误，应为 YYYY-MM-DD HH:MM，例如 2026-10-10 23:59，实际：{s!r}")

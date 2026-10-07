@@ -1,5 +1,6 @@
 """课程 / 作业新增与编辑对话框：所有修改走 GUI，不用手改 JSON。"""
 from __future__ import annotations
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -12,8 +13,15 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
 )
 
-from .models import Course, Homework
+from .models import Course, Homework, normalize_text
 from .storage import DataStore
+
+
+def _ime_friendly(edit: QLineEdit) -> QLineEdit:
+    """显式允许输入法（中文/全角），不限制输入内容。"""
+    edit.setAttribute(Qt.WA_InputMethodEnabled, True)
+    edit.setInputMethodHints(Qt.ImhNone)
+    return edit
 
 
 class CourseDialog(QDialog):
@@ -21,7 +29,7 @@ class CourseDialog(QDialog):
         super().__init__(parent)
         self.setWindowTitle("编辑课程" if course else "添加课程")
         self._course = course
-        self.name_edit = QLineEdit(course.name if course else "")
+        self.name_edit = _ime_friendly(QLineEdit(course.name if course else ""))
         self.weekday_spin = QSpinBox()
         self.weekday_spin.setRange(1, 7)
         self.weekday_spin.setValue(course.weekday if course else 1)
@@ -31,8 +39,8 @@ class CourseDialog(QDialog):
         self.end_spin = QSpinBox()
         self.end_spin.setRange(1, 12)
         self.end_spin.setValue(course.end_section if course else 2)
-        self.loc_edit = QLineEdit(course.location if course else "")
-        self.teacher_edit = QLineEdit(course.teacher if course else "")
+        self.loc_edit = _ime_friendly(QLineEdit(course.location if course else ""))
+        self.teacher_edit = _ime_friendly(QLineEdit(course.teacher if course else ""))
         form = QFormLayout()
         form.addRow("课程名*", self.name_edit)
         form.addRow("星期(1-7)*", self.weekday_spin)
@@ -79,13 +87,13 @@ class HomeworkDialog(QDialog):
             idx = self.course_combo.findData(hw.course_id)
             if idx >= 0:
                 self.course_combo.setCurrentIndex(idx)
-        self.title_edit = QLineEdit(hw.title if hw else "")
-        self.deadline_edit = QLineEdit(hw.deadline if hw else "2026-10-10 23:59")
+        self.title_edit = _ime_friendly(QLineEdit(hw.title if hw else ""))
+        self.deadline_edit = _ime_friendly(QLineEdit(hw.deadline if hw else "2026-10-10 23:59"))
         self.deadline_edit.setPlaceholderText("YYYY-MM-DD HH:MM")
         self.done_check = QCheckBox("已完成")
         if hw:
             self.done_check.setChecked(hw.done)
-        self.remark_edit = QLineEdit(hw.remark if hw else "")
+        self.remark_edit = _ime_friendly(QLineEdit(hw.remark if hw else ""))
         form = QFormLayout()
         form.addRow("所属课程", self.course_combo)
         form.addRow("标题*", self.title_edit)
@@ -108,7 +116,7 @@ class HomeworkDialog(QDialog):
             h.course_id = self.course_combo.currentData()
             h.course_name = self.course_combo.currentText() if h.course_id else ""
             h.title = self.title_edit.text().strip()
-            h.deadline = self.deadline_edit.text().strip()
+            h.deadline = normalize_text(self.deadline_edit.text())
             h.done = self.done_check.isChecked()
             h.remark = self.remark_edit.text().strip()
             h.validate()

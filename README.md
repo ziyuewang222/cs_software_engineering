@@ -62,3 +62,7 @@ python -m course_gui.storage
 # 输出"存储自测通过"即 CRUD + JSON持久化 + 排序正常
 ```
 
+## 注意
+
+- 虚拟环境 `.venv/`、缓存 `__pycache__/` 不提交（见 `.gitignore`），只提交代码。
+- `data.json` 为本地示例数据，可自行清空后使用。

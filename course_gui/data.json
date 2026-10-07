@@ -1,0 +1,35 @@
+{
+  "courses": [
+    {
+      "id": "c001",
+      "name": "高等数学",
+      "weekday": 1,
+      "start_section": 1,
+      "end_section": 2,
+      "location": "教3-201",
+      "teacher": "张老师",
+      "color": "#4C8DFF"
+    },
+    {
+      "id": "c002",
+      "name": "软件工程",
+      "weekday": 2,
+      "start_section": 3,
+      "end_section": 4,
+      "location": "教1-305",
+      "teacher": "李老师",
+      "color": "#41B883"
+    }
+  ],
+  "homeworks": [
+    {
+      "id": "h001",
+      "course_id": "c001",
+      "course_name": "高等数学",
+      "title": "第三章习题",
+      "deadline": "2026-10-10 23:59",
+      "done": false,
+      "remark": "P132 1-10题"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+# Python 虚拟环境
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+# 编辑器
+.vscode/
+.idea/
+# 系统
+.DS_Store
+# GUI 运行时截图等临时文件
+*.tmp

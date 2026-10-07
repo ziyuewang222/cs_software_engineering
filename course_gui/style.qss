@@ -1,0 +1,21 @@
+/* 课程作业管理系统 QSS：浅色圆角风格 */
+QMainWindow { background: #F3F5F9; }
+QLabel { color: #333; font-size: 14px; }
+QPushButton {
+    background: #4C8DFF; color: white; border: none;
+    border-radius: 6px; padding: 6px 12px; font-size: 13px;
+}
+QPushButton:hover { background: #3A76E0; }
+QPushButton:pressed { background: #2F63C4; }
+QTableWidget, QListWidget {
+    background: white; border: 1px solid #E0E4EC;
+    border-radius: 8px; gridline-color: #EEF1F6; font-size: 13px;
+}
+QTableWidget::item:selected, QListWidget::item:selected {
+    background: #DBE7FF; color: #1A2B4A;
+}
+QHeaderView::section {
+    background: #EAF0FA; border: none; padding: 4px; color: #445;
+}
+QCalendarWidget QToolButton { color: #333; }
+QStatusBar { color: #666; font-size: 12px; }
